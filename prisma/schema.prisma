@@ -1,0 +1,303 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  //url      = env("DATABASE_URL")
+}
+
+model actividad {
+  id            Int             @id @default(autoincrement())
+  evidenciaId   Int
+  nombre        String
+  descripcion   String?
+  fecha         DateTime?
+  puntajeMaximo Float?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime?
+  deletedAt     DateTime?
+  eliminado     Boolean         @default(false)
+  evidencia     evidencia       @relation(fields: [evidenciaId], references: [id], map: "Actividad_evidenciaId_fkey")
+  notaactividad notaactividad[]
+
+  @@index([evidenciaId], map: "Actividad_evidenciaId_fkey")
+}
+
+model asignatura {
+  id              Int               @id @default(autoincrement())
+  semestreId      Int
+  nombre          String
+  sigla           String
+  nivel           String
+  prerequisito    String
+  area            String
+  hp              Int
+  hc              Int
+  haa             Int
+  hip             Int
+  he              Int
+  creditos        Int
+  justificacion   String
+  createdAt       DateTime          @default(now())
+  deletedAt       DateTime?
+  eliminado       Boolean           @default(false)
+  seleccionado    Boolean           @default(false)
+  updatedAt       DateTime?
+  semestre        semestre          @relation(fields: [semestreId], references: [id], map: "Asignatura_semestreId_fkey")
+  clase           clase[]
+  competencia     competencia[]
+  estrategia      estrategia[]
+  estudiante      estudiante[]
+  objetivos       objetivos[]
+  recursos        recursos[]
+  promedioparcial promedioparcial[]
+  contenido       contenido[]
+
+  @@index([semestreId], map: "Asignatura_semestreId_fkey")
+}
+
+model asistencia {
+  id           Int        @id @default(autoincrement())
+  estudianteId Int
+  fecha        DateTime
+  presente     Boolean
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime?
+  deletedAt    DateTime?
+  eliminado    Boolean    @default(false)
+  claseId      Int
+  clase        clase      @relation(fields: [claseId], references: [id], map: "Asistencia_claseId_fkey")
+  estudiante   estudiante @relation(fields: [estudianteId], references: [id], map: "Asistencia_estudianteId_fkey")
+
+  @@unique([estudianteId, claseId], map: "Asistencia_estudianteId_claseId_key")
+  @@index([claseId], map: "Asistencia_claseId_fkey")
+}
+
+model clase {
+  id           Int          @id @default(autoincrement())
+  asignaturaId Int
+  fecha        DateTime     @unique(map: "Clase_fecha_key")
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime?
+  deletedAt    DateTime?
+  eliminado    Boolean      @default(false)
+  asistencia   asistencia[]
+  asignatura   asignatura   @relation(fields: [asignaturaId], references: [id], map: "Clase_asignaturaId_fkey")
+
+  @@index([asignaturaId], map: "Clase_asignaturaId_fkey")
+}
+
+model competencia {
+  id                 Int                  @id @default(autoincrement())
+  asignaturaId       Int
+  tipo               String
+  descripcion        String               @db.Text
+  porcentaje         Float
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime?
+  deletedAt          DateTime?
+  eliminado          Boolean              @default(false)
+  asignatura         asignatura           @relation(fields: [asignaturaId], references: [id], map: "Competencia_asignaturaId_fkey")
+  criterioevaluacion criterioevaluacion[]
+  promedioparcials   promedioparcial[]
+
+  @@index([asignaturaId], map: "Competencia_asignaturaId_fkey")
+}
+
+model criterioevaluacion {
+  id               Int               @id @default(autoincrement())
+  competenciaId    Int
+  nombre           String
+  descripcion      String            @db.Text
+  porcentaje       Float
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime?
+  deletedAt        DateTime?
+  eliminado        Boolean           @default(false)
+  competencia      competencia       @relation(fields: [competenciaId], references: [id], map: "CriterioEvaluacion_competenciaId_fkey")
+  evidencia        evidencia[]
+  promedioparcials promedioparcial[]
+
+  @@index([competenciaId], map: "CriterioEvaluacion_competenciaId_fkey")
+}
+
+model estrategia {
+  id           Int        @id @default(autoincrement())
+  asignaturaId Int
+  descripcion  String     @db.Text
+  tipo         String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime?
+  deletedAt    DateTime?
+  eliminado    Boolean    @default(false)
+  asignatura   asignatura @relation(fields: [asignaturaId], references: [id], map: "Estrategia_asignaturaId_fkey")
+
+  @@index([asignaturaId], map: "Estrategia_asignaturaId_fkey")
+}
+
+model estudiante {
+  id                   Int                 @id @default(autoincrement())
+  asignaturaId         Int
+  nombre               String
+  ci                   String
+  email                String?
+  celular              Int?
+  createdAt            DateTime            @default(now())
+  updatedAt            DateTime?
+  deletedAt            DateTime?
+  eliminado            Boolean             @default(false)
+  registro             Int?
+  porcentajeAsistencia Float?              @default(0)
+  asistencia           asistencia[]
+  asignatura           asignatura          @relation(fields: [asignaturaId], references: [id], map: "Estudiante_asignaturaId_fkey")
+  notaactividad        notaactividad[]
+  promedioparcial      promedioparcial[]
+  calificacionfinal    calificacionfinal[]
+
+  @@index([asignaturaId], map: "Estudiante_asignaturaId_fkey")
+}
+
+model evidencia {
+  id         Int @id @default(autoincrement())
+  criterioId Int
+
+  nombre String?
+  tipo   String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  deletedAt DateTime?
+  eliminado Boolean   @default(false)
+
+  actividad          actividad[]
+  criterioevaluacion criterioevaluacion @relation(fields: [criterioId], references: [id], map: "Evidencia_criterioId_fkey")
+  promedioparcials   promedioparcial[]
+
+  @@index([criterioId], map: "Evidencia_criterioId_fkey")
+}
+
+model notaactividad {
+  id           Int        @id @default(autoincrement())
+  actividadId  Int
+  estudianteId Int
+  puntaje      Float      @db.Float
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime?
+  deletedAt    DateTime?
+  eliminado    Boolean    @default(false)
+  actividad    actividad  @relation(fields: [actividadId], references: [id], map: "NotaActividad_actividadId_fkey")
+  estudiante   estudiante @relation(fields: [estudianteId], references: [id], map: "NotaActividad_estudianteId_fkey")
+
+  @@index([actividadId], map: "NotaActividad_actividadId_fkey")
+  @@index([estudianteId], map: "NotaActividad_estudianteId_fkey")
+}
+
+model objetivos {
+  id           Int        @id @default(autoincrement())
+  asignaturaId Int
+  descripcion  String     @db.Text
+  tipo         String
+  createdAt    DateTime   @default(now())
+  deletedAt    DateTime?
+  eliminado    Boolean    @default(false)
+  updatedAt    DateTime?
+  asignatura   asignatura @relation(fields: [asignaturaId], references: [id], map: "Objetivos_asignaturaId_fkey")
+
+  @@index([asignaturaId], map: "Objetivos_asignaturaId_fkey")
+}
+
+model recursos {
+  id           Int        @id @default(autoincrement())
+  asignaturaId Int
+  descripcion  String     @db.Text
+  tipo         String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime?
+  deletedAt    DateTime?
+  eliminado    Boolean    @default(false)
+  asignatura   asignatura @relation(fields: [asignaturaId], references: [id], map: "Recursos_asignaturaId_fkey")
+
+  @@index([asignaturaId], map: "Recursos_asignaturaId_fkey")
+}
+
+model semestre {
+  id           Int          @id @default(autoincrement())
+  usuarioId    Int
+  nombre       String
+  fechaInicio  DateTime
+  estado       Boolean
+  fechaFin     DateTime
+  deletedAt    DateTime?
+  eliminado    Boolean      @default(false)
+  seleccionado Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime?
+  asignatura   asignatura[]
+  usuario      usuario      @relation(fields: [usuarioId], references: [id], map: "Semestre_usuarioId_fkey")
+
+  @@index([usuarioId], map: "Semestre_usuarioId_fkey")
+}
+
+model usuario {
+  id            Int        @id @default(autoincrement())
+  nombreUsuario String     @unique(map: "Usuario_nombreUsuario_key")
+  contrasena    String
+  creadoEn      DateTime   @default(now())
+  semestre      semestre[]
+}
+
+model promedioparcial {
+  id           Int @id @default(autoincrement())
+  estudianteId Int
+  asignaturaId Int
+
+  competenciaId    Int?
+  criterioId       Int?
+  evidenciaId      Int?
+  tipo             String // "evidencia", "criterio", "competencia", "Final", "Segundo Turno"
+  promedio         Float
+  notaSegundoTurno Float?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  eliminado Boolean   @default(false)
+
+  estudiante  estudiante          @relation(fields: [estudianteId], references: [id])
+  asignatura  asignatura          @relation(fields: [asignaturaId], references: [id])
+  competencia competencia?        @relation(fields: [competenciaId], references: [id])
+  criterio    criterioevaluacion? @relation(fields: [criterioId], references: [id])
+  evidencia   evidencia?          @relation(fields: [evidenciaId], references: [id])
+}
+
+model calificacionfinal {
+  id           Int @id @default(autoincrement())
+  estudianteId Int
+
+  notaFinal        Float
+  notaSegundoTurno Float?
+  turnoAprobado    Int?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  eliminado Boolean   @default(false)
+
+  estudiante estudiante @relation(fields: [estudianteId], references: [id])
+}
+
+//Para agregar Contenido
+model contenido {
+  id           Int     @id @default(autoincrement())
+  asignaturaId Int
+  titulo       String
+  descripcion  String  @db.Text
+  tipo         String
+  recurso      String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime?
+  deletedAt DateTime?
+  eliminado Boolean   @default(false)
+
+  asignatura asignatura @relation(fields: [asignaturaId], references: [id])
+}
