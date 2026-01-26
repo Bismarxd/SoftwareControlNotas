@@ -1,5 +1,14 @@
 Login
 <img width="756" height="672" alt="image" src="https://github.com/user-attachments/assets/9d88f691-efb3-4703-9225-d67900560830" />
+Inicio
+<img width="1421" height="937" alt="image" src="https://github.com/user-attachments/assets/b0eeb90c-f056-4d11-9a9d-d5283afc4802" />
+Semestre
+<img width="12" height="4" alt="image" src="https://github.com/user-attachments/assets/f3a16ecb-cc1d-4079-8353-cce07bc246dc" />
+<img width="1354" height="777" alt="image" src="https://github.com/user-attachments/assets/db04c6e5-ec1c-4de9-b3e6-afbc6af6c6af" />
+
+<img width="1452" height="1747" alt="image" src="https://github.com/user-attachments/assets/77cb7ab7-deca-40b9-a3de-bcc3f1ff39b6" />
+<img width="1398" height="723" alt="image" src="https://github.com/user-attachments/assets/526a433b-a521-4405-8d3a-a01d3e9d31d8" />
+<img width="1464" height="1546" alt="image" src="https://github.com/user-attachments/assets/52b4b169-e33b-4324-afee-cdedaa8f17e5" />
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
