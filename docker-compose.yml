@@ -7,9 +7,9 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - DATABASE_URL=mysql://root:root@db:3306/softwarecontrol3
-      - JWT_SECRET=mi_secreto_super_seguro
-      - GEMINI_API_KEY=AIzaSyADEhUXRESHrubWDQcT80R-TwK6ZopQx0g
+      - DATABASE_URL=DATABASE_URL=${DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
     depends_on:
       db:
         condition: service_healthy
