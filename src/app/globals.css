@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+/* Habilitar el modo oscuro manual por clase para Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+.dark {
+  --background: #121212;
+  --foreground: #ededed;
+}
+
+.black {
+  --background: #000000;
+  --foreground: #ffffff;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Para las alertas */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-in-out;
+}
+
+/* ─── Jodit Editor — Dark Mode Overrides ─────────────────────────────────── */
+.dark .jodit-container {
+  background-color: #1e1e1e !important;
+  border-color: #374151 !important;
+  color: #e5e7eb !important;
+}
+
+.dark .jodit-toolbar {
+  background-color: #111827 !important;
+  border-bottom-color: #374151 !important;
+}
+
+.dark .jodit-toolbar__box {
+  background-color: #111827 !important;
+  border-color: #374151 !important;
+}
+
+.dark .jodit-toolbar-button {
+  color: #d1d5db !important;
+}
+
+.dark .jodit-toolbar-button:hover,
+.dark .jodit-toolbar-button_active {
+  background-color: #1f2937 !important;
+  color: #f9fafb !important;
+}
+
+.dark .jodit-toolbar-button svg,
+.dark .jodit-toolbar-button span {
+  color: #9ca3af !important;
+  fill: #9ca3af !important;
+}
+
+.dark .jodit-toolbar-button:hover svg,
+.dark .jodit-toolbar-button:hover span {
+  color: #f3f4f6 !important;
+  fill: #f3f4f6 !important;
+}
+
+.dark .jodit-workplace {
+  background-color: #1e1e1e !important;
+  color: #e5e7eb !important;
+}
+
+.dark .jodit-wysiwyg {
+  background-color: #1e1e1e !important;
+  color: #e5e7eb !important;
+  caret-color: #e5e7eb !important;
+}
+
+.dark .jodit-wysiwyg p,
+.dark .jodit-wysiwyg span,
+.dark .jodit-wysiwyg li,
+.dark .jodit-wysiwyg h1,
+.dark .jodit-wysiwyg h2,
+.dark .jodit-wysiwyg h3 {
+  color: #e5e7eb !important;
+}
+
+.dark .jodit-status-bar {
+  background-color: #111827 !important;
+  border-top-color: #374151 !important;
+  color: #6b7280 !important;
+}
+
+.dark .jodit-placeholder {
+  color: #6b7280 !important;
+}
+
+.dark .jodit-popup__content,
+.dark .jodit-popup {
+  background-color: #1f2937 !important;
+  border-color: #374151 !important;
+  color: #e5e7eb !important;
+}
+
+.dark .jodit-popup .jodit-toolbar-button:hover {
+  background-color: #374151 !important;
+}
+
+.dark .jodit-ui-separator {
+  border-color: #374151 !important;
+}
