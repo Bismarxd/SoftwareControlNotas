@@ -1,0 +1,44 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: software_notas_app
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=mysql://root:root@db:3306/softwarecontrol3
+      - JWT_SECRET=mi_secreto_super_seguro
+      - GEMINI_API_KEY=AIzaSyADEhUXRESHrubWDQcT80R-TwK6ZopQx0g
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - software_network
+    restart: always
+
+  db:
+    image: mysql:8.0
+    container_name: software_notas_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=softwarecontrol3
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - software_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+networks:
+  software_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
